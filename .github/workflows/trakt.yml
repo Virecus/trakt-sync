@@ -1,0 +1,13 @@
+name: Trakt Sync Test
+
+on:
+  repository_dispatch:
+    types: [telegram_reel]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print payload
+        run: echo "${{ toJson(github.event.client_payload) }}"
