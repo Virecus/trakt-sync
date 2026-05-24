@@ -21,6 +21,4 @@ jobs:
         env:
           MESSAGE: ${{ github.event.client_payload.message }}
           TMDB_KEY: ${{ secrets.TMDB_KEY }}
-          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
-          TRAKT_CLIENT_SECRET: ${{ secrets.TRAKT_CLIENT_SECRET }}
-          TRAKT_TOKEN: ${{ secrets.TRAKT_TOKEN }}
+          WORKER_URL: ${{ secrets.WORKER_URL }}

@@ -2,8 +2,7 @@ import fetch from "node-fetch";
 
 const message = process.env.MESSAGE?.trim();
 const tmdbKey = process.env.TMDB_KEY;
-const traktClientId = process.env.TRAKT_CLIENT_ID;
-const traktToken = process.env.TRAKT_TOKEN;
+const workerUrl = process.env.WORKER_URL; // Cloudflare Worker URL
 
 if (!message) {
   console.error("No message provided.");
@@ -25,15 +24,9 @@ async function addToTrakt(mediaType, tmdbId, title) {
     [traktType]: [{ ids: { tmdb: tmdbId } }],
   };
 
-  const res = await fetch("https://api.trakt.tv/sync/watchlist", {
+  const res = await fetch(`${workerUrl}/trakt`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${traktToken}`,
-      "trakt-api-version": "2",
-      "trakt-api-key": traktClientId,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
