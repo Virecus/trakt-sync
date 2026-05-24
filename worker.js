@@ -20,7 +20,10 @@ export default {
         });
 
         const traktText = await traktRes.text();
-        return new Response(traktText, {
+        return new Response(JSON.stringify({
+          status: traktRes.status,
+          body: traktText,
+        }), {
           status: traktRes.status,
           headers: { 'Content-Type': 'application/json' },
         });

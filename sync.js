@@ -30,13 +30,26 @@ async function addToTrakt(mediaType, tmdbId, title) {
     body: JSON.stringify(body),
   });
 
-  if (res.ok) {
-    console.log(`Added to Trakt watchlist: "${title}" (${traktType})`);
-  } else {
-    const err = await res.text();
-    console.error(`Trakt API error: ${res.status} - ${err}`);
+  const responseText = await res.text();
+  let responseJson;
+  try {
+    responseJson = JSON.parse(responseText);
+  } catch {
+    console.error(`Worker returned non-JSON (Trakt likely blocked): ${responseText.slice(0, 300)}`);
     process.exit(1);
   }
+
+  // Worker wraps Trakt response as { status, body }
+  const traktStatus = responseJson.status ?? res.status;
+  const traktBody = responseJson.body ?? responseText;
+
+  if (traktStatus >= 400) {
+    console.error(`Trakt API error ${traktStatus}: ${traktBody.slice(0, 300)}`);
+    process.exit(1);
+  }
+
+  console.log(`Added to Trakt watchlist: "${title}" (${traktType})`);
+  console.log(`Trakt response: ${traktBody}`);
 }
 
 async function main() {
