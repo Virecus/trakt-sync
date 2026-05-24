@@ -22,17 +22,14 @@ async function searchTMDb(query) {
 async function addToTrakt(mediaType, tmdbId, title) {
   const traktType = mediaType === "movie" ? "movies" : "shows";
   const body = {
-    [traktType]: [
-      {
-        ids: { tmdb: tmdbId },
-      },
-    ],
+    [traktType]: [{ ids: { tmdb: tmdbId } }],
   };
 
   const res = await fetch("https://api.trakt.tv/sync/watchlist", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization: `Bearer ${traktToken}`,
       "trakt-api-version": "2",
       "trakt-api-key": traktClientId,
