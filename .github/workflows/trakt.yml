@@ -1,13 +1,27 @@
-name: Trakt Sync Test
+name: Trakt Sync
 
 on:
   repository_dispatch:
     types: [telegram_reel]
 
 jobs:
-  test:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print payload
-        run: echo "${{ toJson(github.event.client_payload) }}"
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install axios
+
+      - name: Run sync script
+        run: node sync.js
+        env:
+          MESSAGE: ${{ github.event.client_payload.message }}
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
+          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+          TRAKT_TOKEN: ${{ secrets.TRAKT_TOKEN }}
