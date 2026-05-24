@@ -15,11 +15,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm install axios
+      - run: npm install
 
-      - name: Run sync script
-        run: node sync.js
+      - run: node sync.js
         env:
           MESSAGE: ${{ github.event.client_payload.message }}
           TMDB_KEY: ${{ secrets.TMDB_KEY }}
